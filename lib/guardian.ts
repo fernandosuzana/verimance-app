@@ -17,7 +17,7 @@ const RULES: { stage: number; w: number; re: RegExp; l: [string, string, string]
   { stage: 1, w: 10, re: /deployed|peacekeep|army|military|oil rig|\brig\b|offshore|north sea|un mission|armée|exército|missão/i, l: ["Far-away job story", "Emploi lointain", "História de trabalho distante"] },
   { stage: 2, w: 10, re: /can'?t (?:do )?(?:video|call)|camera (?:is )?(?:broken|not)|security reasons|pas de (?:vidéo|caméra)|não posso (?:fazer )?(?:vídeo|chamada)|câmera quebrou/i, l: ["Avoids video calls", "Évite les appels vidéo", "Evita chamada de vídeo"] },
   { stage: 3, w: 20, re: /customs|hospital|stuck|frozen|arrest|emergency|surgery|leave papers|lawyer|douane|hôpital|bloqué|urgence|alfândega|preso|bloquead|emergência/i, l: ["Sudden crisis story", "Histoire de crise soudaine", "História de crise repentina"] },
-  { stage: 4, w: 30, re: /gift ?cards?|wire|western union|moneygram|send (?:me )?(?:money|\$)|transfer|\$\s?\d|\d[\d,. ]*\s?(?:usd|cad|dollars)|cartes?-cadeaux|virement|envoyer de l'argent|cartões?[- ]presente|transferência|pix|mandar dinheiro|r\$\s?\d|dólares/i, l: ["Money request", "Demande d'argent", "Pedido de dinheiro"] },
+  { stage: 4, w: 30, re: /gift ?cards?|wire|western union|moneygram|send (?:me )?(?:money|\$)|transfer|\$\s?\d|\d[\d,. ]*\s?(?:usd|cad|dollars)|cartes?-cadeaux|virement|envoyer de l'argent|cartões?[- ]presente|transferência|pix|mandar dinheiro|r\$\s?\d|\d[\d.,]*\s?(?:dólares|reais)|dólares/i, l: ["Money request", "Demande d'argent", "Pedido de dinheiro"] },
   { stage: 4, w: 28, re: /crypto|bitcoin|usdt|trading|returns?|profit|invest|% a month|plateforme|rendement|placement|plataforma|rendimento|lucro|investir/i, l: ["Investment pitch", "Proposition d'investissement", "Proposta de investimento"] },
   { stage: 2, w: 14, re: /don'?t tell|our secret|between us|n'en parlez pas|entre nous|não conta|segredo|entre nós/i, l: ["Asks for secrecy", "Demande le secret", "Pede segredo"] },
 ];
@@ -45,7 +45,9 @@ export function analyzeRules(msgs: Msg[], match: MatchFacts, lang: Lang): Analys
   }
   risk = Math.min(97, risk);
   const level: Level = risk >= 70 ? "critical" : risk >= 45 ? "high" : risk >= 25 ? "caution" : "safe";
-  return { risk, level, stage: STAGES[stage], signals: signals.slice(0, 5), advice: adviceFor(level, lang), engine: "rules" };
+  const order = { high: 0, med: 1, low: 2 };
+  const top = signals.map((x, i) => ({ x, i })).sort((a, b) => order[a.x.weight] - order[b.x.weight] || a.i - b.i).map((o) => o.x).slice(0, 5);
+  return { risk, level, stage: STAGES[stage], signals: top, advice: adviceFor(level, lang), engine: "rules" };
 }
 
 function client() { return process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null; }
