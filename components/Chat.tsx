@@ -52,11 +52,11 @@ export function Chat({ d, me, conversationId, other, initialMsgs, initialAlerts 
           <div className="row"><button className="btn sm primary" onClick={() => report(false)}>{d.sendReport}</button><button className="btn sm danger" onClick={() => report(true)}>{d.sendReport} + {d.block}</button></div>
         </div>)}
       <div className="msgs" ref={box} aria-live="polite">
-        <div className="gnote safe"><b>Guardian</b>{d.guardianWatching}</div>
+        <div className="gnote safe"><b>Verimance Guardian</b>{d.guardianWatching}</div>
         {done && <div className="gnote safe"><b>Verimance</b>{done}</div>}
         {items.map((it) => "m" in it && it.m
           ? <div key={it.k} className={`bub ${it.m.sender === me ? "me" : "them"}`}>{it.m.body}</div>
-          : <div key={it.k} className={`gnote ${(it as { a: A }).a.level}`}><b>Guardian</b>{(it as { a: A }).a.advice}</div>)}
+          : <div key={it.k} className={`gnote ${(it as { a: A }).a.level}`}><b>Verimance Guardian</b>{(it as { a: A }).a.advice}</div>)}
       </div>
       {other.removed ? <p className="banner" style={{ margin: 10 }}>{d.removedAcc}</p> : (
         <form className="composer" onSubmit={send}>

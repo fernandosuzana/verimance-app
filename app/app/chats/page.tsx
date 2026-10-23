@@ -18,7 +18,7 @@ export default async function Chats() {
         return (<Link key={c.id} href={`/app/chats/${c.id}`} className="card row" style={{ textDecoration: "none", color: "inherit" }}>
           {p?.photo_url ? <img className="av" src={p.photo_url} alt="" /> : <div className="av">{p?.name?.[0] || "?"}</div>}
           <div style={{ minWidth: 0, flex: 1 }}><div className="nm">{p?.name || "—"}</div><div className="ct" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.last_message}</div></div>
-          {l && l !== "safe" && <span className={`chip ${l === "caution" ? "warn" : "danger"}`}>Guardian</span>}
+          {l && l !== "safe" && <span className={`chip ${l === "caution" ? "warn" : "danger"}`}>Verimance Guardian</span>}
         </Link>); })}</div>
     </div>);
 }

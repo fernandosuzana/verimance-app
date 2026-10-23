@@ -13,7 +13,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       {profile?.status === "restricted" && <p className="banner" style={{ marginBottom: 14 }}>{d.restrictedMe}</p>}
       {profile?.status === "removed" ? <p className="banner">{d.removedAcc}</p> : children}
       <nav className="tabbar" aria-label="App">
-        <Link href="/app/discover">{d.discover}</Link><Link href="/app/chats">{d.chats}</Link><Link href="/app/guardian">Guardian</Link><Link href="/app/me">{d.me}</Link>
+        <Link href="/app/discover">{d.discover}</Link><Link href="/app/chats">{d.chats}</Link><Link href="/app/guardian">Verimance Guardian</Link><Link href="/app/me">{d.me}</Link>
       </nav>
     </div>
   );

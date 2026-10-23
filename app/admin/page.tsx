@@ -26,7 +26,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         return (<article key={p?.id || rs[0].id} className="card case">
           <div className="row">{p?.photo_url ? <img className="av" src={p.photo_url} alt="" /> : <div className="av">{p?.name?.[0] || "?"}</div>}
             <div><div className="nm">{p?.name}, {p?.age} · {p?.city}</div><div className="ct">{rs.length} report(s) · account {p?.status} · ID {p?.verification}</div></div></div>
-          <div style={{ textAlign: "right" }}><b style={{ fontSize: 28, color: risk >= 70 ? "var(--danger)" : risk >= 40 ? "var(--warn)" : "var(--safe)" }}>{risk}</b><div className="note">Guardian risk</div></div>
+          <div style={{ textAlign: "right" }}><b style={{ fontSize: 28, color: risk >= 70 ? "var(--danger)" : risk >= 40 ? "var(--warn)" : "var(--safe)" }}>{risk}</b><div className="note">Verimance Guardian risk</div></div>
           <div style={{ gridColumn: "1/-1" }}>{rs.map((r) => (<div key={r.id} style={{ borderTop: "1px solid var(--line)", paddingTop: 8, marginTop: 8 }}>
             <b>{REASON[r.reason] || r.reason}</b> <span className={`chip ${r.status === "open" ? "warn" : "safe"}`}>{r.status}</span><span className="note"> · {new Date(r.created_at).toLocaleString()}</span>
             {r.note && <p className="small">“{r.note}”</p>}{(r.evidence as string[])?.length > 0 && <ul className="sigs">{(r.evidence as string[]).map((e, i) => <li key={i}>{e}</li>)}</ul>}</div>))}</div>

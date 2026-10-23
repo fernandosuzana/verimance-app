@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   await admin.from("conversations").update({ last_message: text.slice(0, 140), last_message_at: new Date().toISOString() }).eq("id", conv.id);
 
-  // Guardian protects the person RECEIVING this message, after the response is sent.
+  // Verimance Guardian protects the person RECEIVING this message, after the response is sent.
   after(() => protectRecipient(conv.id, recipient as Profile, profile));
   return NextResponse.json({ message: msg });
 }
@@ -41,7 +41,7 @@ async function protectRecipient(conversationId: string, recipient: Profile, send
     await admin.from("guardian_alerts").insert({ conversation_id: conversationId, user_id: recipient.id, level: a.level, risk: a.risk, stage: a.stage, signals: a.signals, advice: a.advice, engine: a.engine });
   if (["money_request", "investment"].includes(a.stage) && last?.stage !== a.stage && hasPlus(recipient)) {
     const { data: ally } = await admin.from("allies").select("name,email,notify_money").eq("user_id", recipient.id).maybeSingle();
-    if (ally?.notify_money) await sendEmail(ally.email, "Verimance · Guardian alert",
-      `Hello ${ally.name},\n\n${recipient.name} chose you as their family ally on Verimance.\nGuardian just noticed that someone in one of their conversations brought up money or an investment. Guardian has advised ${recipient.name} not to send anything.\nA friendly call from you could help. You can't see their messages, and they know you were notified.\n\n— Verimance`);
+    if (ally?.notify_money) await sendEmail(ally.email, "Verimance · Verimance Guardian alert",
+      `Hello ${ally.name},\n\n${recipient.name} chose you as their family ally on Verimance.\nGuardian just noticed that someone in one of their conversations brought up money or an investment. Verimance Guardian has advised ${recipient.name} not to send anything.\nA friendly call from you could help. You can't see their messages, and they know you were notified.\n\n— Verimance`);
   }
 }

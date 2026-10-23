@@ -4,8 +4,8 @@ import { Header } from "@/components/Header";
 import { getDict } from "@/lib/lang";
 
 export const metadata: Metadata = {
-  title: "Verimance · Dating for 45+ protected by Guardian AI",
-  description: "Verimance is the dating app for people 45+ where every member is verified and Guardian AI spots romance-scam patterns inside the conversation.",
+  title: "Verimance · Dating for 45+ protected by Verimance Guardian",
+  description: "Verimance is the dating app for people 45+ where every member is verified and Verimance Guardian spots romance-scam patterns inside the conversation.",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

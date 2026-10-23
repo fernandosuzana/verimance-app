@@ -69,12 +69,12 @@ function parseJson(t: string) {
   return JSON.parse(s >= 0 && e > s ? t.slice(s, e + 1) : t);
 }
 
-/** Guardian AI: rules first, then the model refines. Never throws. */
+/** Verimance Guardian: rules first, then the model refines. Never throws. */
 export async function analyzeConversation(msgs: Msg[], match: MatchFacts, lang: Lang): Promise<Analysis> {
   const base = analyzeRules(msgs, match, lang);
   const ai = client(); if (!ai || !msgs.some((m) => m.from === "match")) return base;
   const convo = msgs.slice(-30).map((m) => `${m.from === "member" ? "Member" : "Match"}: ${m.text}`).join("\n");
-  const prompt = `You are Guardian, the romance-scam protection agent inside Verimance, a dating app for adults 45+. Judge ONLY the match's behaviour.
+  const prompt = `You are Verimance Guardian, the romance-scam protection agent inside Verimance, a dating app for adults 45+. Judge ONLY the match's behaviour.
 Match facts: account ${match.accountDays} days old; ID verified: ${match.idVerified}; trust score ${match.trust}/100.
 Playbook stages: love_bombing, isolation (push to WhatsApp/Telegram, avoids video, secrecy), crisis (emergency, customs, hospital, frozen account), money_request (gift cards, wire, fees), investment (crypto, trading platform, guaranteed returns). Also watch identity inconsistencies, far-away jobs, pressure and urgency.
 Use "critical" only when there is a crisis story or a request for money, gift cards, crypto or an investment. Be calibrated: ordinary warmth from a genuine person is safe. Never call the person a scammer; raise flags. Speak to the member warmly and plainly.
@@ -97,11 +97,11 @@ Reply with only JSON. Write label, advice in ${LANGNAME[lang]}; evidence is a sh
   } catch { return base; }
 }
 
-/** "Talk to Guardian": the member's companion. */
+/** "Talk to Verimance Guardian": the member's companion. */
 export async function askGuardian(history: { role: "user" | "assistant"; content: string }[], context: string, member: { name: string; age: number | null; city: string }, lang: Lang) {
   const ai = client();
-  if (!ai) return L(lang, "Guardian AI isn't connected yet. Ask the Verimance team to add the Anthropic API key.", "Guardian IA n'est pas encore connecté.", "O Guardian IA ainda não está conectado. Peça à equipe Verimance para adicionar a chave da API da Anthropic.");
-  const system = `You are Guardian, the warm, protective AI companion inside Verimance, a dating app for adults 45+. You are talking with ${member.name} (${member.age ?? "?"}, ${member.city}). Answer in ${LANGNAME[lang]}, in 2-5 short sentences, plainly, like a wise friend. Talk about dating, their matches, scams, safety, profile tips and first dates. Never call a specific person a scammer; describe the signs. Point to safe actions in Verimance: staying in the app, reporting, blocking, the family ally, meeting in public. If they sent money or feel in danger: Canadian Anti-Fraud Centre 1-888-495-8501, reportfraud.ftc.gov (US), boletim de ocorrência (Brazil), emergency 911 / 190.
+  if (!ai) return L(lang, "Verimance Guardian isn't connected yet. Ask the Verimance team to add the Anthropic API key.", "Verimance Guardian n'est pas encore connecté.", "O Verimance Guardian ainda não está conectado. Peça à equipe Verimance para adicionar a chave da API da Anthropic.");
+  const system = `You are Verimance Guardian, the warm, protective AI companion inside Verimance, a dating app for adults 45+. You are talking with ${member.name} (${member.age ?? "?"}, ${member.city}). Answer in ${LANGNAME[lang]}, in 2-5 short sentences, plainly, like a wise friend. Talk about dating, their matches, scams, safety, profile tips and first dates. Never call a specific person a scammer; describe the signs. Point to safe actions in Verimance: staying in the app, reporting, blocking, the family ally, meeting in public. If they sent money or feel in danger: Canadian Anti-Fraud Centre 1-888-495-8501, reportfraud.ftc.gov (US), boletim de ocorrência (Brazil), emergency 911 / 190.
 Their conversations right now:
 ${context || "(none yet)"}`;
   try {

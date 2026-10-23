@@ -1,6 +1,6 @@
 # Verimance
 
-Plataforma de relacionamento para pessoas 45+, com o **Guardian**, uma IA que lê as conversas e alerta sobre golpes românticos. Trilíngue: francês, inglês e português.
+Plataforma de relacionamento para pessoas 45+, com o **Verimance Guardian**, uma IA que lê as conversas e alerta sobre golpes românticos. Trilíngue: francês, inglês e português.
 
 **O que já funciona neste código**
 
@@ -12,13 +12,13 @@ Plataforma de relacionamento para pessoas 45+, com o **Guardian**, uma IA que l�
 | Verificação | O membro pede verificação; a equipe aprova no console |
 | Descobrir (`/app/discover`) | Só perfis verificados e ativos, filtrados por interesse, sem bloqueados |
 | Conversas (`/app/chats`) | Chat privado em tempo real. Só os dois participantes leem |
-| Guardian | Analisa cada mensagem no servidor e alerta quem recebe. Regras + IA (Claude) |
-| Conversar com o Guardian (`/app/guardian`) | O membro pergunta sobre um match; o Guardian responde com o contexto das conversas |
-| Aliado da família | Recebe um e-mail curto quando o Guardian detecta pedido de dinheiro |
+| Verimance Guardian | Analisa cada mensagem no servidor e alerta quem recebe. Regras + IA (Claude) |
+| Conversar com o Verimance Guardian (`/app/guardian`) | O membro pergunta sobre um match; o Verimance Guardian responde com o contexto das conversas |
+| Aliado da família | Recebe um e-mail curto quando o Verimance Guardian detecta pedido de dinheiro |
 | Denúncia e bloqueio | Com evidências anexadas automaticamente |
-| Guardian+ | Assinatura mensal ou anual pelo Stripe, cobrada na moeda local; teste grátis de 14 dias |
+| Verimance Guardian+ | Assinatura mensal ou anual pelo Stripe, cobrada na moeda local; teste grátis de 14 dias |
 | Console da equipe (`/admin`) | Denúncias, verificações, mensagens de investidores, chaves de API |
-| API B2B (`/api/v1/conversations/analyze`) | Parceiros enviam conversas e recebem a análise do Guardian |
+| API B2B (`/api/v1/conversations/analyze`) | Parceiros enviam conversas e recebem a análise do Verimance Guardian |
 | Investidores (`/investors`) | Formulário que grava no banco e envia e-mail para investors@verimance.com |
 
 ---
@@ -33,7 +33,7 @@ Você vai criar 3 contas gratuitas e 1 chave paga. Faça na ordem.
 3. Em **Project Settings › API**, copie três valores: **Project URL**, **anon public** e **service_role** (este é secreto).
 4. Em **Authentication › URL Configuration**, coloque em *Site URL* o endereço do site (ex.: `https://verimance.com`) e adicione `https://verimance.com/auth/callback` em *Redirect URLs*.
 
-### 2. Guardian IA — Anthropic (pago por uso)
+### 2. Verimance Guardian — Anthropic (pago por uso)
 1. Crie uma conta em **console.anthropic.com**, adicione um cartão em *Billing* e crie uma chave em **API Keys**.
 2. Guarde a chave (começa com `sk-ant-`).
 
@@ -56,7 +56,7 @@ Você vai criar 3 contas gratuitas e 1 chave paga. Faça na ordem.
 3. Agora `/admin` abre o console da equipe.
 
 ### 5. Opcionais (podem ficar para depois)
-- **Pagamentos (Stripe)**: crie o produto *Guardian+* com dois preços recorrentes (US$15/mês e US$150/ano) e ative **Adaptive Pricing** para cobrar na moeda local. Preencha `STRIPE_SECRET_KEY`, `STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_YEARLY`. Crie um webhook para `https://SEU-SITE/api/stripe/webhook` com os eventos `checkout.session.completed`, `customer.subscription.updated` e `customer.subscription.deleted`, e coloque o segredo em `STRIPE_WEBHOOK_SECRET`. Sem isso, o botão de assinar fica oculto e todos ganham o teste de 14 dias.
+- **Pagamentos (Stripe)**: crie o produto *Verimance Guardian+* com dois preços recorrentes (US$15/mês e US$150/ano) e ative **Adaptive Pricing** para cobrar na moeda local. Preencha `STRIPE_SECRET_KEY`, `STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_YEARLY`. Crie um webhook para `https://SEU-SITE/api/stripe/webhook` com os eventos `checkout.session.completed`, `customer.subscription.updated` e `customer.subscription.deleted`, e coloque o segredo em `STRIPE_WEBHOOK_SECRET`. Sem isso, o botão de assinar fica oculto e todos ganham o teste de 14 dias.
 - **E-mails (Resend)**: para o formulário de investidores e os alertas do aliado da família. Crie conta em resend.com, verifique o domínio verimance.com e preencha `RESEND_API_KEY`.
 - **Domínio**: na Vercel, *Settings › Domains › Add* `verimance.com` e siga as instruções de DNS. Combine antes com quem cuida do app atual.
 - **Lojas**: quando os apps estiverem publicados, preencha `NEXT_PUBLIC_APP_STORE_URL` e `NEXT_PUBLIC_PLAY_STORE_URL`.
@@ -65,9 +65,9 @@ Você vai criar 3 contas gratuitas e 1 chave paga. Faça na ordem.
 
 ## Privacidade e segurança (como foi construído)
 - Toda tabela tem **Row Level Security**: cada membro só lê as próprias conversas, alertas e denúncias.
-- Mensagens só são gravadas pelo servidor, para o Guardian analisar cada uma. A chave da Anthropic fica só no servidor.
+- Mensagens só são gravadas pelo servidor, para o Verimance Guardian analisar cada uma. A chave da Anthropic fica só no servidor.
 - Membros não conseguem alterar sozinhos verificação, Trust Score, plano ou papel de administrador.
-- O Guardian nunca acusa ninguém: mostra sinais e explica.
+- O Verimance Guardian nunca acusa ninguém: mostra sinais e explica.
 
 ## Ainda não incluído (próximas entregas de engenharia)
 - **Verificação automática de identidade** (documento + prova de vida) com um fornecedor como Persona ou Veriff. Hoje a equipe aprova manualmente no console.

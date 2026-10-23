@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   const { data: ppl } = others.length ? await sb.from("profiles").select("id,name,age,city,trust").in("id", others) : { data: [] };
   const { data: alerts } = await sb.from("guardian_alerts").select("conversation_id,level,signals").order("created_at", { ascending: false }).limit(50);
   const ctx = (convs || []).map((c, i) => { const p = (ppl || []).find((x) => x.id === others[i]); const a = (alerts || []).find((x) => x.conversation_id === c.id);
-    return p ? `- ${p.name}, ${p.age ?? "?"}, ${p.city}; trust ${p.trust}; Guardian level ${a?.level || "safe"}${a ? "; signals: " + (a.signals as { label: string }[]).map((s) => s.label).join("; ") : ""}` : ""; }).filter(Boolean).join("\n");
+    return p ? `- ${p.name}, ${p.age ?? "?"}, ${p.city}; trust ${p.trust}; Verimance Guardian level ${a?.level || "safe"}${a ? "; signals: " + (a.signals as { label: string }[]).map((s) => s.label).join("; ") : ""}` : ""; }).filter(Boolean).join("\n");
   const answer = await askGuardian(h, ctx, { name: profile.name, age: profile.age, city: profile.city }, profile.lang as Lang);
   return NextResponse.json({ answer });
 }

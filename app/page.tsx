@@ -38,7 +38,7 @@ export default async function Home() {
       <h2 className="h2">{d.plansH}</h2>
       <div className="plans">
         <div className="card plan"><h3>{d.free}</h3><p className="price"><b>$0</b></p><ul><li>{d.f1}</li><li>{d.f2}</li><li>{d.f3}</li></ul><Link className="btn" href="/signup">{d.join}</Link></div>
-        <div className="card plan plus"><h3>Guardian+</h3><p className="price"><b>US$15</b> {d.perMonth}</p><ul><li>{d.p1}</li><li>{d.p2}</li><li>{d.p3}</li></ul><Link className="btn primary" href="/signup">{d.ctaJoin}</Link></div>
+        <div className="card plan plus"><h3>Verimance Guardian+</h3><p className="price"><b>US$15</b> {d.perMonth}</p><ul><li>{d.p1}</li><li>{d.p2}</li><li>{d.p3}</li></ul><Link className="btn primary" href="/signup">{d.ctaJoin}</Link></div>
       </div>
       <p className="note" style={{ marginTop: 12 }}>{d.priceNote}</p>
       <StoreBadges d={d} />

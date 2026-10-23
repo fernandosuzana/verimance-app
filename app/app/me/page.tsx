@@ -17,7 +17,7 @@ export default async function Me({ searchParams }: { searchParams: Promise<{ bil
       <h1 style={{ fontSize: 36 }}>{d.me}</h1>
       <section className="card stack"><b>{d.photo}</b><PhotoUpload uid={user.id} current={profile.photo_url} label={d.choosePhoto} />
         <p className="small">{profile.verification === "verified" ? <span className="chip safe">{d.verified}</span> : profile.verification === "pending" ? <span className="chip warn">{d.pending}</span> : <a href="/app/onboarding?step=verify">{d.startVerify}</a>}</p></section>
-      <section id="plan" className="card stack"><b>Guardian+</b><p>{plan}</p>
+      <section id="plan" className="card stack"><b>Verimance Guardian+</b><p>{plan}</p>
         {billing === "ok" && <p className="ok">{d.saved}</p>}
         {!billingOn ? <p className="note">{d.billingOff}</p> : profile.plan === "plus"
           ? <form action="/api/billing/portal" method="post"><button className="btn sm">{d.manageBilling}</button></form>
