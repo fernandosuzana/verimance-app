@@ -32,6 +32,10 @@ export function adviceFor(level: Level, lang: Lang) {
   }[level];
 }
 
+export function crisisAdvice(lang: Lang) {
+  return L(lang, "A sudden emergency is often how a money request starts. Don't send anything, and ask for a live video call before you go further.", "Une urgence soudaine précède souvent une demande d'argent. N'envoyez rien et demandez un appel vidéo en direct avant d'aller plus loin.", "Uma emergência repentina costuma ser o início de um pedido de dinheiro. Não envie nada e peça uma chamada de vídeo ao vivo antes de seguir.");
+}
+
 /** Fast deterministic layer. Always runs; also the fallback when AI is unavailable. */
 export function analyzeRules(msgs: Msg[], match: MatchFacts, lang: Lang): Analysis {
   const them = msgs.filter((m) => m.from === "match");
@@ -44,10 +48,13 @@ export function analyzeRules(msgs: Msg[], match: MatchFacts, lang: Lang): Analys
     if (hit) { risk += r.w; stage = Math.max(stage, r.stage); signals.push({ label: r.l[{ en: 0, fr: 1, pt: 2 }[lang]], evidence: hit.text.slice(0, 120), weight: r.w >= 20 ? "high" : r.w >= 12 ? "med" : "low" }); }
   }
   risk = Math.min(97, risk);
-  const level: Level = risk >= 70 ? "critical" : risk >= 45 ? "high" : risk >= 25 ? "caution" : "safe";
+  let level: Level = risk >= 70 ? "critical" : risk >= 45 ? "high" : risk >= 25 ? "caution" : "safe";
+  // "critical" is reserved for a crisis story or a money/investment ask.
+  if (level === "critical" && stage < 3) level = "high";
+  if (stage >= 4 && risk >= 45) level = "critical";
   const order = { high: 0, med: 1, low: 2 };
   const top = signals.map((x, i) => ({ x, i })).sort((a, b) => order[a.x.weight] - order[b.x.weight] || a.i - b.i).map((o) => o.x).slice(0, 5);
-  return { risk, level, stage: STAGES[stage], signals: top, advice: adviceFor(level, lang), engine: "rules" };
+  return { risk, level, stage: STAGES[stage], signals: top, advice: level === "critical" && stage === 3 ? crisisAdvice(lang) : adviceFor(level, lang), engine: "rules" };
 }
 
 function client() { return process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null; }
@@ -70,7 +77,7 @@ export async function analyzeConversation(msgs: Msg[], match: MatchFacts, lang: 
   const prompt = `You are Guardian, the romance-scam protection agent inside Verimance, a dating app for adults 45+. Judge ONLY the match's behaviour.
 Match facts: account ${match.accountDays} days old; ID verified: ${match.idVerified}; trust score ${match.trust}/100.
 Playbook stages: love_bombing, isolation (push to WhatsApp/Telegram, avoids video, secrecy), crisis (emergency, customs, hospital, frozen account), money_request (gift cards, wire, fees), investment (crypto, trading platform, guaranteed returns). Also watch identity inconsistencies, far-away jobs, pressure and urgency.
-Be calibrated: ordinary warmth from a genuine person is safe. Never call the person a scammer; raise flags. Speak to the member warmly and plainly.
+Use "critical" only when there is a crisis story or a request for money, gift cards, crypto or an investment. Be calibrated: ordinary warmth from a genuine person is safe. Never call the person a scammer; raise flags. Speak to the member warmly and plainly.
 Rules engine already found: ${JSON.stringify(base.signals.map((s) => s.label))}
 
 Conversation:
